@@ -57,3 +57,44 @@ def copy_file(source_path, destination_path):
 def remove_file_extension(file_path):
     filename, file_extension = os.path.splitext(file_path)
     return filename
+
+
+
+
+def delete_files_in_directory(directory_path):
+    try:
+        # Get the list of files in the directory
+        file_list = os.listdir(directory_path)
+
+        # Iterate over the files and delete each one
+        for file_name in file_list:
+            file_path = os.path.join(directory_path, file_name)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+
+        print(f"All files in {directory_path} have been deleted.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+def delete_items_in_directory(directory_path, delete_files=True, delete_folders=True):
+    try:
+        # Get the list of items in the directory
+        items_list = os.listdir(directory_path)
+
+        # Iterate over the items and delete each based on the specified criteria
+        for item_name in items_list:
+            item_path = os.path.join(directory_path, item_name)
+
+            if delete_files and os.path.isfile(item_path):
+                os.remove(item_path)
+                print(f"Deleted file: {item_path}")
+
+            if delete_folders and os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+                print(f"Deleted folder: {item_path}")
+
+        print(f"All items in {directory_path} have been deleted.")
+    except Exception as e:
+        print(f"Error: {e}")

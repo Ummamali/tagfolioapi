@@ -1,17 +1,23 @@
 {
-	"eleven": {
-		"name": ["Jane hopper", "Eleven"]
-	},
-	"max": {
-		"name": ["Max Mayfield"]
-	},
-	"shahrukh": {
-		"name": ["Shahrukh Khan"]
-	},
-	"jimHopper": {
-		"name": ["Jim Hopper", "Chief Hopper"]
-	},
-	"ranbirKapoor": {
-		"name": ["Ranbir Kapoor"]
-	}
+  "eleven": {
+    "name": ["Jane hopper", "Eleven"]
+  },
+  "max": {
+    "name": ["Max Mayfield"]
+  },
+  "shahrukh": {
+    "name": ["Shahrukh Khan"]
+  },
+  "jimHopper": {
+    "name": ["Jim Hopper", "Chief Hopper"]
+  },
+  "ranbirKapoor": {
+    "name": ["Ranbir Kapoor"]
+  },
+  "imranKhan": {
+    "name": ["Imran Khan"]
+  },
+  "kajol": {
+    "name": ["Kajol Devgan"]
+  }
 }

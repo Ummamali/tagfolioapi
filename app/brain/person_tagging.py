@@ -14,19 +14,19 @@ def find_similar_person(folderpath):
 	cache = set()
 
 	report = {}
-	pictures = list_directories("./_temp")
+	pictures = list_directories(current_app.config['TEMP_FOLDER_PATH'])
 	for picture in pictures:
-		picture_faces = list_files(os.path.join("./_temp", picture))
+		picture_faces = list_files(os.path.join(current_app.config['TEMP_FOLDER_PATH'], picture))
 		report[picture] = {}
 		for picture_face in picture_faces:
 			report[picture][picture_face] = {}
 			other_pictures = [fldr for fldr in pictures if fldr != picture]
 			for other_picture in other_pictures:
 				report[picture][picture_face][other_picture] = {}
-				other_picture_faces = list_files(os.path.join("./_temp", other_picture))
+				other_picture_faces = list_files(os.path.join(current_app.config['TEMP_FOLDER_PATH'], other_picture))
 				for other_picture_face in other_picture_faces:
-					left_face = os.path.join("./_temp", picture, picture_face)
-					right_face = os.path.join("./_temp", other_picture, other_picture_face)
+					left_face = os.path.join(current_app.config['TEMP_FOLDER_PATH'], picture, picture_face)
+					right_face = os.path.join(current_app.config['TEMP_FOLDER_PATH'], other_picture, other_picture_face)
 					if left_face+right_face not in cache and right_face+left_face not in cache:
 						report[picture][picture_face][other_picture][other_picture_face] = float(calculate_face_similarity(left_face, right_face))
 						cache.add(left_face+right_face)
@@ -64,12 +64,12 @@ def tag_people_in(directory, threshhold=0.5):
 	known_data = read_json_to_dict(known_faces_data_path)
 	known_faces = list_files(known_faces_dir_path)
 	for known_face in known_faces:
-		other_images = list_directories("./_temp")
+		other_images = list_directories(current_app.config['TEMP_FOLDER_PATH'])
 		for other_image in other_images:
-			other_faces = list_files(os.path.join("./_temp", other_image))
+			other_faces = list_files(os.path.join(current_app.config['TEMP_FOLDER_PATH'], other_image))
 			for other_face in other_faces:
 				image_a = os.path.join(known_faces_dir_path, known_face)
-				image_b = os.path.join("./_temp", other_image, other_face)
+				image_b = os.path.join(current_app.config['TEMP_FOLDER_PATH'], other_image, other_face)
 
 				if(calculate_face_similarity(image_a, image_b) > threshhold):
 					person_id = remove_file_extension(known_face)

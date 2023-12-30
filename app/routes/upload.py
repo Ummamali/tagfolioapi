@@ -4,6 +4,7 @@ from flask import request, jsonify
 from werkzeug.utils import secure_filename
 import os
 from ..brain.person_tagging import tag_people_in
+from app.brain.utils import delete_items_in_directory
 
 upload_route_bp = Blueprint('upload', __name__)
 
@@ -15,6 +16,8 @@ def upload():
         if 'files' not in request.files:
             return jsonify({'error': 'No files uploaded'})
 
+        delete_items_in_directory(current_app.config['STAGING_AREA'], delete_files=True)
+        delete_items_in_directory(current_app.config['TEMP_FOLDER_PATH'], delete_folders=True)
         files = request.files.getlist('files')
 
         # Iterate through the uploaded files
