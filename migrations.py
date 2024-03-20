@@ -14,7 +14,7 @@ def seed_database():
     db = client['tagfolio']
     
     # Insert the dummy data into a collection
-    collection = db['user']
+    collection = db['users']
     collection.insert_many(dummy_users)
 
     # Close the connection
