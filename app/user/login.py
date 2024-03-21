@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request, make_response
 from app.utils.database import find_document
 from app.utils.misc import run_schema
+from app.utils.hashing import verify_password
+from flask_jwt_extended import JWTManager, create_access_token
 from http import HTTPStatus
 from .routes import user_bp
 
@@ -26,8 +28,9 @@ def login():
   req_obj = request.json
   if(run_schema(req_obj, req_obj_schema)):
     doc = find_document('users', {'email': req_obj['email']})
-    if(doc is not None and doc['password'] == req_obj['password']):
-      return jsonify({'userId': str(doc['_id'])})
+    if(doc is not None and verify_password(req_obj['password'], doc['password'])):
+      access_token = create_access_token(identity=str(doc['_id']))
+      return jsonify(access_token=access_token)
     else:
       return jsonify({'msg': 'Unauthorized'}), HTTPStatus.UNAUTHORIZED
   else:

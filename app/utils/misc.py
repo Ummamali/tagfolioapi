@@ -5,6 +5,10 @@ from flask import current_app
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import os
+from .database import find_document, add_document_to_collection
+from bson import ObjectId
+import random
 
 
 
@@ -14,6 +18,19 @@ def run_schema(instance, schema):
         return True
     except jsonschema.exceptions.ValidationError as e:
         return False
+    
+
+
+def is_valid_password(password):
+    # Check if the password is at least 8 characters long
+    if len(password) < 8:
+        return False
+
+    # Check if the password contains at least one special character and one number
+    if not re.search(r'[!@#$%^&*]', password) or not re.search(r'\d', password):
+        return False
+
+    return True
 
 
 def send_email(receiver_email, subject, message):
@@ -37,5 +54,26 @@ def send_email(receiver_email, subject, message):
         server.sendmail(sender_email, receiver_email, text)
         server.quit()
         print("Email sent successfully!")
+        return True
     except Exception as e:
         print(f"Failed to send email. Error: {e}")
+        return False
+    
+
+# Following are the messages written for each email type
+message_text = {"RESET_PASSWORD": {"subject": "Reset Password", "message_file": "email_messages/change_password.txt"}}
+
+
+def send_verification_email(emailType, user_id, route):
+    subject = message_text[emailType]['subject']
+    current_directory = os.path.dirname(__file__)
+    file_path = os.path.join(current_directory, message_text[emailType]['message_file'])
+    print(file_path)
+    with open(file_path) as f:
+        message = f.read()
+    doc = find_document('users', {"_id": ObjectId(user_id)})
+    reciever_email = doc['email']
+    code = str(random.randint(100000, 999999))
+    if send_email(reciever_email, subject, message + code):
+        add_document_to_collection('verifications', {"_id": doc['_id'], "email": doc["email"], "code": code, "route": route})
+        return True

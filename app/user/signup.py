@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.utils.database import add_document_to_collection, find_document
+from app.utils.database import add_document_to_collection, find_document, delete_document
 from http import HTTPStatus
 from .routes import user_bp
 from app.utils.misc import run_schema, send_email
@@ -33,11 +33,14 @@ def signup():
   req_obj = request.json
   if run_schema(req_obj, req_obj_schema):
     verify = str(random.randint(100000, 999999))
-    result = add_document_to_collection('unverified_users', {"verify": verify,'username': req_obj['username'],'email': req_obj['email'], 'password': hash_password(req_obj['password'])})
-    send_email(req_obj['email'], 'Verify Your Registration', f'Verification Code: {verify}')
-    return jsonify({'acknowledged': result.acknowledged})
+    success = send_email(req_obj['email'], 'Verify Your Registration', f'Verification Code: {verify}')
+    if success:
+      result = add_document_to_collection('unverified_users', {"verify": verify,'username': req_obj['username'],'email': req_obj['email'], 'password': hash_password(req_obj['password'])})
+      return jsonify({'ack': result.acknowledged})
+    else:
+      return jsonify({"msg": "Unable to send email", "ack": False})
   else:
-    return jsonify({'msg': 'Invalid Schema!'}), HTTPStatus.BAD_REQUEST
+    return jsonify({'msg': 'Invalid Schema!', "ack": False}), HTTPStatus.BAD_REQUEST
   
 
 
@@ -67,6 +70,7 @@ def signup_verify():
     if found is not None:
         del found['verify']
         add_document_to_collection('users', {**found})
+        delete_document("unverified_users", {**req_obj})
     return jsonify({"acknowledged": True})
   else:
     return jsonify({'msg': 'Invalid Schema!'}), HTTPStatus.BAD_REQUEST

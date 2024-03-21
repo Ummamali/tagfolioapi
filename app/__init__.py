@@ -2,15 +2,20 @@
 
 import os
 from flask_mail import Mail, Message
+from flask_jwt_extended import JWTManager
+from datetime import timedelta
 
 from flask import Flask, jsonify
-
+from colorama import Fore, Style
 from flask_cors import CORS
 
 def create_app():
 
 	app = Flask(__name__)
 	CORS(app)
+
+	
+	jwt = JWTManager(app)
 
 
 	# Connections with database
@@ -21,9 +26,13 @@ def create_app():
 	# For mailing and other stuff
 	app.config['MAIL_EMAIL'] = os.environ.get('TAGFOLIO_EMAIL', None)
 	app.config['MAIL_PASSWORD'] = os.environ.get('TAGFOLIO_PASSWORD', None)
+	# Setting up json web tokens
+	app.config["JWT_SECRET_KEY"] = "super-secret"
+	app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=6)
+	
 
 	if any(item is None for item in (app.config['MAIL_EMAIL'], app.config['MAIL_PASSWORD'])):
-		raise Exception("Environment variables not set properly!")
+		print(Fore.YELLOW + "WARNING! Environment variables not set properly!" + Style.RESET_ALL)
 
 	# The main / route to ping the whole server
 	@app.route('/', methods=('GET',))
