@@ -1,19 +1,47 @@
 from pymongo import MongoClient
 from app.utils.hashing import hash_password
+from bson import ObjectId
+
 # This file contains all the dummy data for demonstration and testing purposes
 
-db_url = 'mongodb://application:tf123@127.0.0.1:9000/'
-db_name = 'tagfolio'
+db_url = "mongodb://application:tf123@127.0.0.1:9000/"
+db_name = "tagfolio"
 
 # Dummy data, each item in this dictionary is a collection with value to list of docs
-dummy_data = {'users': [{"email": "tagfolioservices@gmail.com", "username": "Test Tagfolio", "password": hash_password("tagfolio@1")}]}
+dummy_data = {
+    "users": [
+        {
+            "_id": ObjectId("603f5b39872f4f94a26d027d"),
+            "email": "tagfolioservices@gmail.com",
+            "username": "Test Tagfolio",
+            "password": hash_password("tagfolio@1"),
+            "joinedOrganizations": ["603f5b4e872f4f94a26d027f"],
+        },
+        {
+            "_id": ObjectId("603f5b40872f4f94a26d027e"),
+            "email": "ummaali2000@gmail.com",
+            "username": "Test User",
+            "password": hash_password("tagfolio@1"),
+            "joinedOrganizations": [],
+        },
+    ],
+    "organizations": [
+        {
+            "_id": ObjectId("603f5b4e872f4f94a26d027f"),
+            "name": "orgOne",
+            "owner": "603f5b39872f4f94a26d027d",
+            "joinCode": "111222",
+            "members": [],
+        }
+    ],
+}
 
 
 def seed_database():
     # Connect to MongoDB
     client = MongoClient(db_url)
     db = client[db_name]
-    
+
     # Insert the dummy data into a collection
     for coll_name, documents in dummy_data.items():
         collection = db[coll_name]
@@ -43,8 +71,9 @@ def clear_all_collections():
 
     print(f"All collections of {db_name} cleared successfully.")
 
+
 if __name__ == "__main__":
     q = input("Do you want to clear all collections before seeding (y/n): ")
-    if q.lower()[0] == 'y':
+    if q.lower()[0] == "y":
         clear_all_collections()
     seed_database()
