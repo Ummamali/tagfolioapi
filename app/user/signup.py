@@ -34,8 +34,10 @@ req_obj_schema = {
 def signup():
     req_obj = request.json
     verify = str(random.randint(100000, 999999))
-    success = send_email(
-        req_obj['email'], 'Verify Your Registration', f'Verification Code: {verify}')
+    doc_exists = find_document('users', {'email': req_obj['email']}) is not None
+    if doc_exists:
+      return jsonify(message="Cannot register with this email"), HTTPStatus.CONFLICT
+    success = send_email(req_obj['email'], 'Verify Your Registration', f'Verification Code: {verify}')
     if success:
         result = add_document_to_collection('unverified_users', {
                                             "verify": verify, 'username': req_obj['username'], 'email': req_obj['email'], 'password': hash_password(req_obj['password'])})

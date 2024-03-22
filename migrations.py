@@ -2,24 +2,49 @@ from pymongo import MongoClient
 from app.utils.hashing import hash_password
 # This file contains all the dummy data for demonstration and testing purposes
 
-# Dummy data for users collection
-dummy_users = [
-    {"email": "john", "password": hash_password("john12345")},
-    {"email": "alice", "password": hash_password("alice12345")},
-]
+db_url = 'mongodb://application:tf123@127.0.0.1:9000/'
+db_name = 'tagfolio'
+
+# Dummy data, each item in this dictionary is a collection with value to list of docs
+dummy_data = {'users': [{"email": "tagfolioservices@gmail.com", "username": "Test Tagfolio", "password": hash_password("tagfolio@1")}]}
+
 
 def seed_database():
     # Connect to MongoDB
-    client = MongoClient('mongodb://application:tf123@localhost:9000/')
-    db = client['tagfolio']
+    client = MongoClient(db_url)
+    db = client[db_name]
     
     # Insert the dummy data into a collection
-    collection = db['users']
-    collection.insert_many(dummy_users)
+    for coll_name, documents in dummy_data.items():
+        collection = db[coll_name]
+        collection.insert_many(documents)
+        print(f"Collection {coll_name} has been seeded ")
 
     # Close the connection
     client.close()
 
+    print("Database at port 9000 seeded!")
+
+
+def clear_all_collections():
+    # Connect to the MongoDB server
+    client = MongoClient(db_url)
+
+    # Access the specified database
+    db = client[db_name]
+
+    # Get a list of all collection names in the database
+    collection_names = db.list_collection_names()
+
+    # Clear each collection
+    for collection_name in collection_names:
+        collection = db[collection_name]
+        collection.delete_many({})  # Delete all documents in the collection
+
+    print(f"All collections of {db_name} cleared successfully.")
+
 if __name__ == "__main__":
+    q = input("Do you want to clear all collections before seeding (y/n): ")
+    if q.lower()[0] == 'y':
+        clear_all_collections()
     seed_database()
-    print("Dummy Data has been added to your database (9000)")
