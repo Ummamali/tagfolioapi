@@ -4,8 +4,12 @@
 
 ### Step 0: Clone and install the dependencies
 
-python -m venv environ
-pip install -r requirements.txt
+This project is managed by pipenv
+
+- Install pipenv
+  > pip install pipenv
+- Install Dependencies
+  > pipenv install
 
 ### Step 1: Run the database
 
@@ -19,4 +23,5 @@ python migrations.py
 
 ### Step 3: Run the server
 
-python api.py
+> pipenv shell
+> python api.py
