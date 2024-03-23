@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-user_bp = Blueprint('user', __name__)
+user_bp = Blueprint("user", __name__)
 
-from . import login, signup, root_route, edit, organizations
+from . import login, signup, root_route, edit, organizations, delete_account
