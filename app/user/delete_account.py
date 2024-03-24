@@ -2,7 +2,7 @@ from .routes import user_bp
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.utils.misc import send_verification_email
 from app.utils.middlewares import validate_schema
-from app.utils.database import find_document, delete_document
+from app.utils.database import find_document, delete_document, DBConnection
 from flask import jsonify, request
 from http import HTTPStatus
 from bson import ObjectId
@@ -37,7 +37,8 @@ def delete_account_verify():
         return jsonify(message="Unauthorized"), HTTPStatus.UNAUTHORIZED
     verify_doc = find_document(
         "verifications",
-        {"email": requester["email"], "route": "/user/delete", "code": req_obj["code"]},
+        {"email": requester["email"],
+            "route": "/user/delete", "code": req_obj["code"]},
     )
     if verify_doc is None:
         return (
@@ -45,9 +46,18 @@ def delete_account_verify():
             HTTPStatus.BAD_REQUEST,
         )
 
-    # Now user will be deleted and all the places where he is present will be reseted
+    with DBConnection() as db:
+        coll_org = db['organizations']
+        requester_owned_orgs = coll_org.find({"owner": str(requester['_id'])})
+        # First we romove all organizations owned by him
+        requester_owned_orgs_ids = [org['_id'] for org in requester_owned_orgs]
+        coll_org.delete_many(
+            {'_id': {'$in': requester_owned_orgs_ids}})
+        # Then we remove him from joined organizations (not owned by him)
+        joined_orgs = [o for o in requester['joinedOrganizations']
+                       if o not in requester_owned_orgs_ids]
+        for o in joined_orgs:
+            coll_org.update_one({'_id': o}, {'$pull': {'members': user_id}})
+    # Finally, user will be deleted and all the places where he is present has been deleted
     delete_document("users", {"_id": ObjectId(requester["_id"])})
-    # Now removing him from all organizations
-    for org in requester["joinedOrganizations"]:
-        pass
     return jsonify(ack=True)

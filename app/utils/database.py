@@ -99,3 +99,15 @@ def db_alive(mongodb_uri, timeoutMS=2000):
     except ConnectionFailure:
         # If there's a connection failure, return False
         return False
+
+
+class DBConnection:
+    def __enter__(self):
+        # Connect to MongoDB (Make sure you have MongoDB running locally or provide connection details)
+        self.client = MongoClient(current_app.config["DB_URI"])
+        # Select the database
+        db = self.client[current_app.config["DB_NAME"]]
+        return db
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.client.close()
