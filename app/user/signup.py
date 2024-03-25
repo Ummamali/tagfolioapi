@@ -32,17 +32,14 @@ req_obj_schema = {
 def signup():
     req_obj = request.json
     verify = str(random.randint(100000, 999999))
-    doc_exists = find_document(
-        "users", {"email": req_obj["email"]}) is not None
+    doc_exists = find_document("users", {"email": req_obj["email"]}) is not None
     if doc_exists:
         return jsonify(message="Cannot register with this email"), HTTPStatus.CONFLICT
-    verification_doc = find_document(
-        'unverified_users', {"email": req_obj["email"]})
+    verification_doc = find_document("unverified_users", {"email": req_obj["email"]})
     if verification_doc is not None:
-        return jsonify(msg='Code already requested'), HTTPStatus.BAD_REQUEST
+        return jsonify(msg="Code already requested"), HTTPStatus.BAD_REQUEST
     success = send_email(
-        req_obj["email"], "Verify Your Registration", f"Verification Code: {
-            verify}"
+        req_obj["email"], "Verify Your Registration", f"Verification Code: {verify}"
     )
     if success:
         result = add_document_to_collection(
@@ -56,7 +53,10 @@ def signup():
         )
         return jsonify({"ack": result.acknowledged})
     else:
-        return jsonify({"msg": "Unable to send email", "ack": False}), HTTPStatus.INTERNAL_SERVER_ERROR
+        return (
+            jsonify({"msg": "Unable to send email", "ack": False}),
+            HTTPStatus.INTERNAL_SERVER_ERROR,
+        )
 
 
 # Now we verify the user
@@ -80,6 +80,6 @@ def signup_verify():
         del doc["verify"]
         add_document_to_collection("users", {**doc})
         delete_document("unverified_users", {**req_obj})
-        return jsonify({"acknowledged": True})
+        return jsonify(ack=True)
     else:
         return jsonify(ack=False, msg="Unauthorized!"), 400

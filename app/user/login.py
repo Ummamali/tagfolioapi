@@ -26,13 +26,12 @@ req_obj_schema = {
 }
 
 
-@user_bp.route('/login', methods=['POST'])
+@user_bp.route("/login", methods=["POST"])
 @validate_schema(req_obj_schema)
 def login():
     req_obj = request.json
-    doc = find_document('users', {'email': req_obj['email']})
-    if (doc is not None and verify_password(req_obj['password'], doc['password'])):
-        access_token = create_access_token(identity=str(doc['_id']))
-        return jsonify(access_token=access_token)
-    else:
-        return jsonify({'msg': 'Unauthorized'}), HTTPStatus.UNAUTHORIZED
+    doc = find_document("users", {"email": req_obj["email"]})
+    if doc is not None and verify_password(req_obj["password"], doc["password"]):
+        access_token = create_access_token(identity=str(doc["_id"]))
+        return jsonify({"token": access_token, "userId": str(doc["_id"])})
+    return jsonify({"msg": "Unauthorized"}), HTTPStatus.UNAUTHORIZED
