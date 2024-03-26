@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, make_response
 from app.utils.database import find_document
 from app.utils.misc import run_schema
 from app.utils.hashing import verify_password
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import get_jwt_identity, jwt_required, create_access_token
 from http import HTTPStatus
 from .routes import user_bp
 from app.utils.middlewares import validate_schema
@@ -35,3 +35,10 @@ def login():
         access_token = create_access_token(identity=str(doc["_id"]))
         return jsonify({"token": access_token, "userId": str(doc["_id"])})
     return jsonify({"msg": "Unauthorized"}), HTTPStatus.UNAUTHORIZED
+
+
+@user_bp.route("/verifyToken", methods=["POST"])
+@jwt_required()
+def verify_token():
+    user_id = get_jwt_identity()
+    return jsonify({"userId": user_id})

@@ -25,6 +25,22 @@ organization_schema = {
 }
 
 
+# get organizations of a user
+@user_bp.route("/organization/all", methods=["GET"])
+@jwt_required()
+def get_organizations():
+    user_id = get_jwt_identity()
+    user = find_document("users", {"_id": ObjectId(user_id)})
+    if user is None:
+        return jsonify(msg="No user"), HTTPStatus.BAD_REQUEST
+    return jsonify(
+        {
+            "joined": user.get("joinedOrganizations"),
+            "owned": user.get("ownedOrganizations"),
+        }
+    )
+
+
 # Frs Organization
 @user_bp.route("/organization", methods=["POST"])
 @jwt_required()
