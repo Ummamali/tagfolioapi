@@ -10,6 +10,7 @@ from app.utils.database import (
     add_document_to_collection,
     update_document,
     update_document_core,
+    replace_ids_with_documents,
 )
 from http import HTTPStatus
 import random
@@ -33,12 +34,26 @@ def get_organizations():
     user = find_document("users", {"_id": ObjectId(user_id)})
     if user is None:
         return jsonify(msg="No user"), HTTPStatus.BAD_REQUEST
-    return jsonify(
-        {
-            "joined": user.get("joinedOrganizations"),
-            "owned": user.get("ownedOrganizations"),
-        }
+    org_ids = {
+        "joined": user.get("joinedOrganizations"),
+        "owned": user.get("ownedOrganizations"),
+    }
+    res_obj = {**org_ids}
+    res_obj = replace_ids_with_documents(
+        res_obj, "joined", "organizations", {"_id": 1, "name": 1, "members": 1}
     )
+    res_obj = replace_ids_with_documents(
+        res_obj, "owned", "organizations", {"_id": 1, "name": 1, "members": 1}
+    )
+
+    new_joined = []
+    for item in res_obj["joined"]:
+        hydrated_doc = replace_ids_with_documents(
+            item, "members", "users", {"username": 1}
+        )
+        new_joined.append(hydrated_doc)
+    print(new_joined)
+    return jsonify(res_obj)
 
 
 # Frs Organization
