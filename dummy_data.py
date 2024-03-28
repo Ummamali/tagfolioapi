@@ -8,7 +8,10 @@ dummy_data = {
             "email": "tagfolioservices@gmail.com",
             "username": "User1",
             "password": hash_password("password@1"),
-            "ownedOrganizations": ["603f5b4e872f4f94a26d027f"],
+            "ownedOrganizations": [
+                ObjectId("603f5b4e872f4f94a26d027f"),
+                ObjectId("603f5b4e872f4f94a26d028f"),
+            ],
             "joinedOrganizations": [],
         },
         {
@@ -17,16 +20,26 @@ dummy_data = {
             "username": "User2",
             "password": hash_password("password@2"),
             "ownedOrganizations": [],
-            "joinedOrganizations": ["603f5b4e872f4f94a26d027f"],
+            "joinedOrganizations": [
+                ObjectId("603f5b4e872f4f94a26d027f"),
+                ObjectId("603f5b4e872f4f94a26d028f"),
+            ],
         },
     ],
     "organizations": [
         {
             "_id": ObjectId("603f5b4e872f4f94a26d027f"),
             "name": "Organization1",
-            "owner": "603f5b39872f4f94a26d027d",
+            "owner": ObjectId("603f5b39872f4f94a26d027d"),
             "joinCode": "111222",
-            "members": ["603f5b40872f4f94a26d027e"],
-        }
+            "members": [ObjectId("603f5b40872f4f94a26d027e")],
+        },
+        {
+            "_id": ObjectId("603f5b4e872f4f94a26d028f"),
+            "name": "Organization2",
+            "owner": ObjectId("603f5b39872f4f94a26d027d"),
+            "joinCode": "111222",
+            "members": [ObjectId("603f5b40872f4f94a26d027e")],
+        },
     ],
 }

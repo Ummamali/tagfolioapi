@@ -1,8 +1,8 @@
 # This file contains all the routes for Use Case 4: Managing Organizations
-
+import pprint
 from .routes import user_bp
 from app.utils.middlewares import validate_schema, validate_schema_multiple
-from flask import request, jsonify
+from flask import request, jsonify, Response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from bson import ObjectId
 from app.utils.database import (
@@ -11,9 +11,13 @@ from app.utils.database import (
     update_document,
     update_document_core,
     replace_ids_with_documents,
+    DBConnection,
 )
+from .org_pipelines import get_all_orgs_pipeline
 from http import HTTPStatus
 import random
+from ..utils.json_encoder import jsonify_customs
+import json
 
 organization_schema = {
     "POST": {
@@ -34,26 +38,14 @@ def get_organizations():
     user = find_document("users", {"_id": ObjectId(user_id)})
     if user is None:
         return jsonify(msg="No user"), HTTPStatus.BAD_REQUEST
-    org_ids = {
-        "joined": user.get("joinedOrganizations"),
-        "owned": user.get("ownedOrganizations"),
-    }
-    res_obj = {**org_ids}
-    res_obj = replace_ids_with_documents(
-        res_obj, "joined", "organizations", {"_id": 1, "name": 1, "members": 1}
-    )
-    res_obj = replace_ids_with_documents(
-        res_obj, "owned", "organizations", {"_id": 1, "name": 1, "members": 1}
-    )
+    with DBConnection() as db:
+        users_col = db["users"]
 
-    new_joined = []
-    for item in res_obj["joined"]:
-        hydrated_doc = replace_ids_with_documents(
-            item, "members", "users", {"username": 1}
-        )
-        new_joined.append(hydrated_doc)
-    print(new_joined)
-    return jsonify(res_obj)
+        res_obj = list(users_col.aggregate(get_all_orgs_pipeline(user_id)))
+
+    return Response(
+        json.dumps(res_obj[0], default=jsonify_customs), mimetype="application/json"
+    )
 
 
 # Frs Organization
