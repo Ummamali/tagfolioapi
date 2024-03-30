@@ -56,7 +56,8 @@ def organization():
     req_obj = request.json
     user_id = get_jwt_identity()
     exists = (
-        find_document("organizations", {"name": req_obj["name"], "owner": user_id})
+        find_document("organizations", {
+                      "name": req_obj["name"], "owner": ObjectId(user_id)})
         is not None
     )
     if exists:
@@ -64,15 +65,20 @@ def organization():
             jsonify(message="Cannot add same organization again"),
             HTTPStatus.CONFLICT,
         )
-
+    new_org = {"name": req_obj["name"],
+               "owner": ObjectId(user_id), "members": []}
     result = add_document_to_collection(
-        "organizations", {"name": req_obj["name"], "owner": user_id, "members": []}
+        "organizations", new_org
     )
     if result.inserted_id is None:
         return jsonify(message="Unable to create organization"), 400
+    with DBConnection() as db:
+        col_users = db['users']
+        col_users.update_one({'_id': ObjectId(user_id)},
+                             {"$push": {"ownedOrganizations": ObjectId(result.inserted_id)}})
     return (
-        jsonify({"ack": True, "organizationId": str(result.inserted_id)}),
-        HTTPStatus.CREATED,
+        Response(json.dumps({"created": new_org},
+                 default=jsonify_customs), mimetype='application/json')
     )
 
 
@@ -93,18 +99,20 @@ def organization_code():
     req_obj = request.json
     user_id = get_jwt_identity()
     code = str(random.randint(100000, 999999))
-    doc = find_document("organizations", {"owner": user_id, "name": req_obj["name"]})
+    doc = find_document(
+        "organizations", {"owner": ObjectId(user_id), "name": req_obj["name"]})
     if doc is None:
         return jsonify(message="Cannot find Organization"), HTTPStatus.BAD_REQUEST
-    if doc["owner"] != user_id:
+    if str(doc["owner"]) != user_id:
         return jsonify(message="Unauthorized"), HTTPStatus.UNAUTHORIZED
-    result = update_document("organizations", {"_id": doc["_id"]}, {"joinCode": code})
+    result = update_document(
+        "organizations", {"_id": doc["_id"]}, {"joinCode": code})
     if not result.acknowledged or result.modified_count != 1:
         return (
             jsonify(message="Unable to generate the joining code"),
             HTTPStatus.BAD_REQUEST,
         )
-    return jsonify({"ack": True, "codeGenerated": code})
+    return jsonify({"ack": True, "joinCode": code})
 
 
 # Joining the organization
@@ -139,7 +147,8 @@ def join_organization():
         return jsonify(message="Unauthorized"), HTTPStatus.UNAUTHORIZED
     # Database State Change
     result = update_document_core(
-        "organizations", {"_id": organization["_id"]}, {"$push": {"members": user_id}}
+        "organizations", {"_id": organization["_id"]}, {
+            "$push": {"members": user_id}}
     )
     result_user = update_document_core(
         "users",
@@ -188,3 +197,33 @@ def leave_organization():
     if not result_org.acknowledged or not result_user.acknowledged:
         return jsonify(message="Unable to leave organization"), HTTPStatus.BAD_REQUEST
     return jsonify(message="Organization left successfully", ack=True)
+
+
+delete_org_schema = {
+    "type": "object",
+    "properties": {
+        "orgId": {"type": "string"}
+    },
+    "required": ["orgId"]
+}
+
+
+@user_bp.route("/organization/delete", methods=["DELETE"])
+@jwt_required()
+@validate_schema(delete_org_schema)
+def delete_organization():
+    user_id = get_jwt_identity()
+    req_obj = request.json
+    org_id = req_obj['orgId']
+    with DBConnection() as db:
+        users_col = db['users']
+        exists = users_col.find_one({'_id': ObjectId(user_id), 'ownedOrganizations': {
+            "$elemMatch": {"$eq": ObjectId(org_id)}}})
+        if exists:
+            users_col.update_one({'_id': ObjectId(user_id)}, {
+                                 "$pull": {"ownedOrganizations": ObjectId(org_id)}})
+            orgs_col = db['organizations']
+            response = orgs_col.delete_one({'_id': ObjectId(org_id)})
+            if response.deleted_count == 1:
+                return jsonify(deleted=org_id)
+    return jsonify(msg='Some error while deleting the organization'), HTTPStatus.BAD_REQUEST

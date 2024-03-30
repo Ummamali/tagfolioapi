@@ -48,6 +48,7 @@ def get_all_orgs_pipeline(user_id):
                             "name": "$$ownedOrg.name",
                             "owner": "$$ownedOrg.owner",
                             "members": "$$ownedOrg.members",
+                            "joinCode": "$$ownedOrg.joinCode",
                             "_id": {"$toString": "$$ownedOrg._id"},
                         },
                     }
