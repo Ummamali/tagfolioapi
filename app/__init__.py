@@ -59,8 +59,10 @@ def create_app():
 
     # Import the routes to register them with the app
     from app.user.routes import user_bp
+    from app.media.routes import media_bp
 
     # Register the blueprints
     app.register_blueprint(user_bp, url_prefix="/user")
+    app.register_blueprint(media_bp, url_prefix="/media")
 
     return app
