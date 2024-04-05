@@ -7,6 +7,9 @@ from datetime import timedelta
 from flask import Flask, jsonify
 from colorama import Fore, Style
 from flask_cors import CORS
+from flask_restful import Api
+
+from app.utils.json_encoder import CustomJSONProvider
 
 from app.utils.database import db_alive
 
@@ -14,7 +17,10 @@ from app.utils.database import db_alive
 def create_app():
 
     app = Flask(__name__)
+    app.json = CustomJSONProvider(app)
     CORS(app)
+
+    api = Api(app)
 
     jwt = JWTManager(app)
 
@@ -22,7 +28,8 @@ def create_app():
     app.config["DB_USER"] = "application"
     app.config["DB_PASSWORD"] = "tf123"
     app.config["DB_URI"] = (
-        f'mongodb://{app.config["DB_USER"]}:{app.config["DB_PASSWORD"]}@127.0.0.1:9000/'
+        f'mongodb://{app.config["DB_USER"]
+                     }:{app.config["DB_PASSWORD"]}@127.0.0.1:9000/'
     )
     app.config["DB_NAME"] = "tagfolio"
     # For mailing and other stuff
@@ -64,5 +71,10 @@ def create_app():
     # Register the blueprints
     app.register_blueprint(user_bp, url_prefix="/user")
     app.register_blueprint(media_bp, url_prefix="/media")
+
+    # importing the resources
+    from app.media.Resources.Bucket import BucketListResource
+    # Registering the resources
+    api.add_resource(BucketListResource, '/res/buckets')
 
     return app
