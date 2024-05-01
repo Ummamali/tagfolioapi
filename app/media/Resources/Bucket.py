@@ -18,23 +18,18 @@ class BucketListResource(Resource):
 
     @jwt_required()
     @paginate()
-    def get(self, page, per_page):
+    def get(self, start, fetch_count):
         user_id = get_jwt_identity()
-        page = request.args.get('page', 1)
-        per_page = request.args.get('per_page', 10)
-        skip = (page - 1) * per_page
         with DBConnection() as db:
             col_ocean = db["ocean"]
             # Aggregation pipeline to paginate through resources array
             pipeline = [
                 # Match documents based on criteria
-                {'$match': {"_id": ObjectId(user_id)}},
+                {"$match": {"_id": ObjectId(user_id)}},
                 # Paginate resources array
-                {'$project': {'buckets': {
-                    '$slice': ['$buckets', skip, per_page]}}}
+                {"$project": {"buckets": {"$slice": ["$buckets", start, fetch_count]}}},
             ]
             result = list(col_ocean.aggregate(pipeline))
-            print(result)
             return jsonify(result)
 
     @jwt_required()
