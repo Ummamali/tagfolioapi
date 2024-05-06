@@ -33,7 +33,7 @@ def login():
     doc = find_document("users", {"email": req_obj["email"]})
     if doc is not None and verify_password(req_obj["password"], doc["password"]):
         access_token = create_access_token(identity=str(doc["_id"]))
-        return jsonify({"token": access_token, "userId": str(doc["_id"])})
+        return jsonify({"token": access_token, "userId": str(doc["_id"]), 'email': doc['email'], 'username': doc['username']})
     return jsonify({"msg": "Unauthorized"}), HTTPStatus.UNAUTHORIZED
 
 

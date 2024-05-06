@@ -17,20 +17,14 @@ class BucketListResource(Resource):
     }
 
     @jwt_required()
-    @paginate()
-    def get(self, start, fetch_count):
+    def get(self):
         user_id = get_jwt_identity()
         with DBConnection() as db:
             col_ocean = db["ocean"]
             # Aggregation pipeline to paginate through resources array
-            pipeline = [
-                # Match documents based on criteria
-                {"$match": {"_id": ObjectId(user_id)}},
-                # Paginate resources array
-                {"$project": {"buckets": {"$slice": ["$buckets", start, fetch_count]}}},
-            ]
-            result = list(col_ocean.aggregate(pipeline))
-            return jsonify(result)
+            result = col_ocean.find_one({'_id': ObjectId(user_id)}, {
+                                        '_id': 0, 'buckets': 1})
+            return jsonify(result['buckets'])
 
     @jwt_required()
     @validate_schema(create_bucket_schema)
@@ -55,7 +49,7 @@ class BucketListResource(Resource):
 
             new_bucket = {"name": name, "items": []}
 
-            # col_ocean.update_one()
+            print('creating bucket....')
             result = col_ocean.update_one(
                 {"_id": ObjectId(user_id)},
                 {"$push": {"buckets": new_bucket}},
