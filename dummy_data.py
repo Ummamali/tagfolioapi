@@ -42,4 +42,27 @@ dummy_data = {
             "members": [ObjectId("603f5b40872f4f94a26d027e")],
         },
     ],
+    "ocean": [
+        {
+            # id is the same as owner's id
+            "_id": ObjectId("603f5b40872f4f94a26d027e"),
+            "known_faces": {
+                "imranKhan": {"name": ["Imran Khan"]},
+                "shahrukh": {"name": ["Shahrukh Khan"]},
+                "kajol": {"name": ["Kajol Devgan"]},
+            },
+            "lastUpdated": 1000,
+            "buckets": [
+                {
+                    "name": "bucketone",
+                    "items": [
+                        {"path": "/", "title": "buildings.jpg"},
+                        {"path": "/", "title": "car.jpg"},
+                        {"path": "/", "title": "cats.jpg"},
+                        {"path": "/", "title": "cups.jpg"},
+                    ],
+                }
+            ],
+        }
+    ],
 }

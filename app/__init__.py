@@ -25,12 +25,9 @@ def create_app():
     jwt = JWTManager(app)
 
     # Connections with database
-    app.config["DB_USER"] = "application"
-    app.config["DB_PASSWORD"] = "tf123"
-    app.config["DB_URI"] = (
-        f'mongodb://{app.config["DB_USER"]
-                     }:{app.config["DB_PASSWORD"]}@127.0.0.1:9000/'
-    )
+    # app.config["DB_USER"] = "application"
+    # app.config["DB_PASSWORD"] = "tf123"
+    app.config["DB_URI"] = f"mongodb://127.0.0.1:27017/"
     app.config["DB_NAME"] = "tagfolio"
     # For mailing and other stuff
     app.config["MAIL_EMAIL"] = os.environ.get("TAGFOLIO_EMAIL", None)
@@ -74,7 +71,8 @@ def create_app():
 
     # importing the resources
     from app.media.Resources.Bucket import BucketListResource
+
     # Registering the resources
-    api.add_resource(BucketListResource, '/res/buckets')
+    api.add_resource(BucketListResource, "/res/buckets")
 
     return app

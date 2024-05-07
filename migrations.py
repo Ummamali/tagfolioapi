@@ -3,7 +3,7 @@ from dummy_data import dummy_data
 
 # This file contains all the dummy data for demonstration and testing purposes
 
-db_url = "mongodb://application:tf123@127.0.0.1:9000/"
+db_url = "mongodb://127.0.0.1:27017/"
 db_name = "tagfolio"
 
 
@@ -21,7 +21,7 @@ def seed_database():
     # Close the connection
     client.close()
 
-    print("Database at port 9000 seeded!")
+    print("Database at port 27017 seeded!")
 
 
 def clear_all_collections():
