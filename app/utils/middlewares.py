@@ -9,13 +9,36 @@ def validate_schema(schema):
         def wrapper(*args, **kwargs):
             if not request.json:
                 return (
-                    jsonify({"error": "Route requires JSON data, none provided!"}),
+                    jsonify(
+                        {"error": "Route requires JSON data, none provided!"}),
                     400,
                 )
             try:
                 validate(instance=request.json, schema=schema)
             except ValidationError as e:
                 return jsonify({"message": "Invalid Schema!", "error": e.message}), 400
+
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def validate_schema_resource(schema):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not request.json:
+                return (
+
+                    {"error": "Route requires JSON data, none provided!"},
+                    400,
+                )
+            try:
+                validate(instance=request.json, schema=schema)
+            except ValidationError as e:
+                return {"message": "Invalid Schema!", "error": e.message}, 400
 
             return func(*args, **kwargs)
 
@@ -40,7 +63,8 @@ def validate_schema_multiple(schema_map):
             # Check if request.json contains JSON data
             if not request.json:
                 return (
-                    jsonify({"error": "Route requires JSON data, none provided!"}),
+                    jsonify(
+                        {"error": "Route requires JSON data, none provided!"}),
                     400,
                 )
 
@@ -75,7 +99,8 @@ def paginate(
         def wrapper(*args, **kwargs):
             # Extract page and per_page query parameters from the request
             start = int(request.args.get(start_param_name, 1))
-            fetch_count = int(request.args.get(count_param_name, default_per_page))
+            fetch_count = int(request.args.get(
+                count_param_name, default_per_page))
 
             # Call the original handler function with pagination parameters
             return func(start=start, fetch_count=fetch_count, *args, **kwargs)

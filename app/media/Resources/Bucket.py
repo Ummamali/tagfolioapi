@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.utils.database import DBConnection
-from app.utils.middlewares import validate_schema, paginate
+from app.utils.middlewares import validate_schema_resource
 from bson import ObjectId
 from flask import jsonify
 from http import HTTPStatus
@@ -11,9 +11,14 @@ from http import HTTPStatus
 
 class BucketListResource(Resource):
     create_bucket_schema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "properties": {"name": {"type": "string", "minLength": 5}},
-        "required": ["name"],
+        "properties": {
+            "name": {
+                "type": "string"
+            }
+        },
+        "required": ["name"]
     }
 
     @jwt_required()
@@ -27,7 +32,7 @@ class BucketListResource(Resource):
             return jsonify(result['buckets'])
 
     @jwt_required()
-    @validate_schema(create_bucket_schema)
+    @validate_schema_resource(create_bucket_schema)
     def post(self):
         req_obj = request.json
         user_id = get_jwt_identity()
@@ -44,10 +49,12 @@ class BucketListResource(Resource):
                     ]
                 )
             )
+            print(result)
             if len(result) > 0:
-                return jsonify(msg="Cannot create same bucket again"), 400
+                return {'msg': 'Cannot create the same bucket again'}, 400
 
-            new_bucket = {"name": name, "items": []}
+            new_bucket = {"name": name, "items": [],
+                          "disorderedBucket": [], "summary": [], "stars": 0}
 
             print('creating bucket....')
             result = col_ocean.update_one(
@@ -55,4 +62,4 @@ class BucketListResource(Resource):
                 {"$push": {"buckets": new_bucket}},
             )
 
-            return jsonify(new_bucket), HTTPStatus.CREATED
+            return new_bucket, HTTPStatus.CREATED

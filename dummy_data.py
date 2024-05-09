@@ -51,17 +51,43 @@ dummy_data = {
                 "shahrukh": {"name": ["Shahrukh Khan"]},
                 "kajol": {"name": ["Kajol Devgan"]},
             },
-            "lastUpdated": 1000,
+            "featuredBuckets": [
+                {"name": "bucketone", "titleCover": "car.jpg"},
+                {"name": "buckettwo", "titleCover": "cats.jpg"},
+            ],
+            "lastUpdated": 1715150682127,
             "buckets": [
                 {
                     "name": "bucketone",
-                    "items": [
-                        {"path": "/", "title": "buildings.jpg"},
-                        {"path": "/", "title": "car.jpg"},
-                        {"path": "/", "title": "cats.jpg"},
-                        {"path": "/", "title": "cups.jpg"},
+                    "disorderedBucket": [
+                        {"title": "jane.jpg"},
+                        {"title": "anna.jpg"}
                     ],
-                }
+                    "items": [
+                        {"path": "/", "title": "car.jpg",
+                            "tags": {"objects": ["car", "sports_car", "desert", "blue_car"], "people": []}},
+                        {"path": "/", "title": "flowers.jpg",
+                            "tags": {"objects": ["flowers", "tree", "wall"], "people": []}},
+                        {"path": "/", "title": "mountains.jpg",
+                            "tags": {"objects": ["mountain", "desert"], "people": []}},
+                    ],
+                    "summary": ["car", "sports_car", "flowers", "mountain"],
+                    "stars": 3
+                },
+                {"name": "buckettwo",
+                 "disorderedBucket": [],
+                 "items": [
+                     {"path": "/", "title": "cats.jpg",
+                      "tags": {"objects": ["cats", "cats (count): 2", "grass"], "people": []}},
+                     {"path": "/", "title": "dogs.jpg",
+                      "tags": {"objects": ["dogs", "dogs (count): 2", "running_dogs"], "people": []}},
+                     {"path": "/", "title": "laptop.jpg",
+                      "tags": {"objects": ["computer", "laptop", "macbook", "keyboard"], "people": []}}
+
+                 ], "summary": ["cats", "dogs", "computer", "grass"],
+                 "stars": 2
+
+                 }
             ],
         }
     ],
