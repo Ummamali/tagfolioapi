@@ -13,12 +13,8 @@ class BucketListResource(Resource):
     create_bucket_schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
-        "properties": {
-            "name": {
-                "type": "string"
-            }
-        },
-        "required": ["name"]
+        "properties": {"name": {"type": "string"}},
+        "required": ["name"],
     }
 
     @jwt_required()
@@ -27,9 +23,10 @@ class BucketListResource(Resource):
         with DBConnection() as db:
             col_ocean = db["ocean"]
             # Aggregation pipeline to paginate through resources array
-            result = col_ocean.find_one({'_id': ObjectId(user_id)}, {
-                                        '_id': 0, 'buckets': 1})
-            return jsonify(result['buckets'])
+            result = col_ocean.find_one(
+                {"_id": ObjectId(user_id)}, {"_id": 0, "buckets": 1}
+            )
+            return jsonify(result["buckets"])
 
     @jwt_required()
     @validate_schema_resource(create_bucket_schema)
@@ -51,12 +48,17 @@ class BucketListResource(Resource):
             )
             print(result)
             if len(result) > 0:
-                return {'msg': 'Cannot create the same bucket again'}, 400
+                return {"msg": "Cannot create the same bucket again"}, 400
 
-            new_bucket = {"name": name, "items": [],
-                          "disorderedBucket": [], "summary": [], "stars": 0}
+            new_bucket = {
+                "name": name,
+                "items": [],
+                "disorderedBucket": [],
+                "summary": [],
+                "stars": 0,
+            }
 
-            print('creating bucket....')
+            print("creating bucket....")
             result = col_ocean.update_one(
                 {"_id": ObjectId(user_id)},
                 {"$push": {"buckets": new_bucket}},

@@ -59,35 +59,85 @@ dummy_data = {
             "buckets": [
                 {
                     "name": "bucketone",
-                    "disorderedBucket": [
-                        {"title": "jane.jpg"},
-                        {"title": "anna.jpg"}
-                    ],
+                    "disorderedBucket": [{"title": "jane.jpg"}, {"title": "anna.jpg"}],
                     "items": [
-                        {"path": "/", "title": "car.jpg",
-                            "tags": {"objects": ["car", "sports_car", "desert", "blue_car"], "people": []}},
-                        {"path": "/", "title": "flowers.jpg",
-                            "tags": {"objects": ["flowers", "tree", "wall"], "people": []}},
-                        {"path": "/", "title": "mountains.jpg",
-                            "tags": {"objects": ["mountain", "desert"], "people": []}},
+                        {
+                            "path": "/",
+                            "title": "car.jpg",
+                            "boxes": [
+                                {
+                                    "box": {"x": 0, "y": 0, "width": 0, "height": 0},
+                                    "tags": ["boxtags1", "boxtags2"],
+                                },
+                                {
+                                    "box": {"x": 20, "y": 20, "width": 0, "height": 0},
+                                    "tags": ["box_2_tags1", "box_2_tags2"],
+                                },
+                            ],
+                            "tags": {
+                                "objects": ["car", "sports_car", "desert", "blue_car"],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "flowers.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": ["flowers", "tree", "wall"],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "mountains.jpg",
+                            "boxes": [],
+                            "tags": {"objects": ["mountain", "desert"], "people": []},
+                        },
                     ],
                     "summary": ["car", "sports_car", "flowers", "mountain"],
-                    "stars": 3
+                    "stars": 3,
                 },
-                {"name": "buckettwo",
-                 "disorderedBucket": [],
-                 "items": [
-                     {"path": "/", "title": "cats.jpg",
-                      "tags": {"objects": ["cats", "cats (count): 2", "grass"], "people": []}},
-                     {"path": "/", "title": "dogs.jpg",
-                      "tags": {"objects": ["dogs", "dogs (count): 2", "running_dogs"], "people": []}},
-                     {"path": "/", "title": "laptop.jpg",
-                      "tags": {"objects": ["computer", "laptop", "macbook", "keyboard"], "people": []}}
-
-                 ], "summary": ["cats", "dogs", "computer", "grass"],
-                 "stars": 2
-
-                 }
+                {
+                    "name": "buckettwo",
+                    "disorderedBucket": [],
+                    "items": [
+                        {
+                            "path": "/",
+                            "title": "cats.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": ["cats", "cats (count): 2", "grass"],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "dogs.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": ["dogs", "dogs (count): 2", "running_dogs"],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "laptop.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": [
+                                    "computer",
+                                    "laptop",
+                                    "macbook",
+                                    "keyboard",
+                                ],
+                                "people": [],
+                            },
+                        },
+                    ],
+                    "summary": ["cats", "dogs", "computer", "grass"],
+                    "stars": 2,
+                },
             ],
         }
     ],
