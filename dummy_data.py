@@ -42,6 +42,7 @@ dummy_data = {
             "members": [ObjectId("603f5b40872f4f94a26d027e")],
         },
     ],
+    # Following is the data about the images stored in two dummy buckets
     "ocean": [
         {
             # id is the same as owner's id
@@ -52,8 +53,8 @@ dummy_data = {
                 "kajol": {"name": ["Kajol Devgan"]},
             },
             "featuredBuckets": [
-                {"name": "bucketone", "titleCover": "car.jpg"},
-                {"name": "buckettwo", "titleCover": "cats.jpg"},
+                {"name": "bucketone", "titleCover": "imageOne.jpg"},
+                {"name": "buckettwo", "titleCover": "imageOne.jpg"},
             ],
             "lastUpdated": 1715150682127,
             "buckets": [
@@ -63,39 +64,71 @@ dummy_data = {
                     "items": [
                         {
                             "path": "/",
-                            "title": "car.jpg",
-                            "boxes": [
-                                {
-                                    "box": {"x": 0, "y": 0, "width": 0, "height": 0},
-                                    "tags": ["boxtags1", "boxtags2"],
-                                },
-                                {
-                                    "box": {"x": 20, "y": 20, "width": 0, "height": 0},
-                                    "tags": ["box_2_tags1", "box_2_tags2"],
-                                },
-                            ],
+                            "title": "imageOne.jpg",
+                            "boxes": [],
                             "tags": {
-                                "objects": ["car", "sports_car", "desert", "blue_car"],
+                                "objects": ["bike", "motor_bike", "orange bike"],
                                 "people": [],
                             },
                         },
                         {
                             "path": "/",
-                            "title": "flowers.jpg",
+                            "title": "imageTwo.jpg",
                             "boxes": [],
                             "tags": {
-                                "objects": ["flowers", "tree", "wall"],
+                                "objects": ["car", "desert", "blue car", "vehicle"],
                                 "people": [],
                             },
                         },
                         {
                             "path": "/",
-                            "title": "mountains.jpg",
+                            "title": "imageThree.jpg",
                             "boxes": [],
-                            "tags": {"objects": ["mountain", "desert"], "people": []},
+                            "tags": {
+                                "objects": ["tree", "flowers", "red flowers"],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "imageFour.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": [
+                                    "mountain",
+                                    "desert",
+                                    "blue skies",
+                                    "landscape",
+                                ],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "imageFive.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": [
+                                    "tree",
+                                    "flowers",
+                                    "bench",
+                                    "chinese",
+                                    "architecture",
+                                ],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "imageSix.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": ["pakistan", "prime minister"],
+                                "people": ["Imran Khan"],
+                            },
                         },
                     ],
-                    "summary": ["car", "sports_car", "flowers", "mountain"],
+                    "summary": ["car", "sports_car", "flowers", "mountain", "trees"],
                     "stars": 3,
                 },
                 {
@@ -104,7 +137,7 @@ dummy_data = {
                     "items": [
                         {
                             "path": "/",
-                            "title": "cats.jpg",
+                            "title": "imageOne.jpg",
                             "boxes": [],
                             "tags": {
                                 "objects": ["cats", "cats (count): 2", "grass"],
@@ -113,7 +146,7 @@ dummy_data = {
                         },
                         {
                             "path": "/",
-                            "title": "dogs.jpg",
+                            "title": "imageTwo.jpg",
                             "boxes": [],
                             "tags": {
                                 "objects": ["dogs", "dogs (count): 2", "running_dogs"],
@@ -122,7 +155,7 @@ dummy_data = {
                         },
                         {
                             "path": "/",
-                            "title": "laptop.jpg",
+                            "title": "imageThree.jpg",
                             "boxes": [],
                             "tags": {
                                 "objects": [
@@ -134,8 +167,54 @@ dummy_data = {
                                 "people": [],
                             },
                         },
+                        {
+                            "path": "/",
+                            "title": "imageFour.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": [
+                                    "cars",
+                                    "two cars",
+                                    "grass",
+                                    "blue sky",
+                                ],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "imageFive.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": [
+                                    "car",
+                                    "sports car",
+                                    "road",
+                                    "yellow car",
+                                ],
+                                "people": [],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "imageSix.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": ["suits", "actors"],
+                                "people": ["Shahrukh Khan", "Amir Khan"],
+                            },
+                        },
+                        {
+                            "path": "/",
+                            "title": "imageSeven.jpg",
+                            "boxes": [],
+                            "tags": {
+                                "objects": ["suits", "actor"],
+                                "people": ["Shahrukh Khan"],
+                            },
+                        },
                     ],
-                    "summary": ["cats", "dogs", "computer", "grass"],
+                    "summary": ["cats", "dogs", "computer", "grass", "cars"],
                     "stars": 2,
                 },
             ],

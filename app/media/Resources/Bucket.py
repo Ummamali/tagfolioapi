@@ -7,6 +7,7 @@ from app.utils.middlewares import validate_schema_resource
 from bson import ObjectId
 from flask import jsonify
 from http import HTTPStatus
+import os
 
 
 class BucketListResource(Resource):
@@ -62,6 +63,12 @@ class BucketListResource(Resource):
             result = col_ocean.update_one(
                 {"_id": ObjectId(user_id)},
                 {"$push": {"buckets": new_bucket}},
+            )
+
+            os.mkdir(
+                os.path.join(
+                    os.path.dirname(os.getcwd()), "tftagging", "content", user_id, name
+                )
             )
 
             return new_bucket, HTTPStatus.CREATED
