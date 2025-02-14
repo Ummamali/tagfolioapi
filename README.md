@@ -1,4 +1,4 @@
-# Tagfolio - NLP Based Multimedia Manager 🚀 📷
+# Tagfolio - NLP Based Multimedia Manager 📡 📷
 ### REST API For Tagfolio
 
 TagFolio is a revolutionary platform designed to address the growing complexity and importance of multimedia content management and analysis in today's digital landscape. 
