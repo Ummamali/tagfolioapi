@@ -7,7 +7,7 @@ With its comprehensive suite of modules, TagFolio offers users a seamless and in
 
 From user management to image and video tagging, multimedia organization, text detection, social media analysis, and advanced natural language processing capabilities, TagFolio provides a holistic solution to streamline the entire workflow of handling multimedia content. 
 
-Web interface repository: (https://github.com/Ummamali/webtagfolio)
+Web interface repository: https://github.com/Ummamali/webtagfolio
 
 ## Key Features  
 
@@ -45,9 +45,29 @@ Ensure you have the following installed:
 
 1. Clone the repository:  
    ```sh
-   git clone 
+   git clone https://github.com/Ummamali/tagfolioapi.git
    cd tagfolioApi
 
+### How to run this backend server
+
+#### Step 0: Clone and install the dependencies
+
+This project is managed by pipenv
+
+- Install pipenv
+  > pip install pipenv
+- Install Dependencies
+  > pipenv install
+
+#### Step 1: Run the database
+
+Go to the tagfoliops repository and run the docker-compose file in database folder
+
+#### Step 2: Add dummy data in the database
+
+In the root of this application there is a migrations.py file. Run it as
+
+python migrations.py
 
 ## Usage
 
@@ -106,27 +126,6 @@ The frontend of this application is built using modern web technologies to ensur
 ## License
 
 This project is licensed under the **MIT License**.  
-
-## How to run this backend server
-
-### Step 0: Clone and install the dependencies
-
-This project is managed by pipenv
-
-- Install pipenv
-  > pip install pipenv
-- Install Dependencies
-  > pipenv install
-
-### Step 1: Run the database
-
-Go to the tagfoliops repository and run the docker-compose file in database folder
-
-### Step 2: Add dummy data in the database
-
-In the root of this application there is a migrations.py file. Run it as
-
-python migrations.py
 
 ### Step 3: Run the server
 
