@@ -69,6 +69,11 @@ In the root of this application there is a migrations.py file. Run it as
 
 python migrations.py
 
+#### Step 3: Run the server
+
+> pipenv shell
+> python api.py
+
 ## Usage
 
 ### 1. Dashboard
@@ -126,8 +131,3 @@ The frontend of this application is built using modern web technologies to ensur
 ## License
 
 This project is licensed under the **MIT License**.  
-
-### Step 3: Run the server
-
-> pipenv shell
-> python api.py
