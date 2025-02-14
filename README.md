@@ -7,7 +7,7 @@ With its comprehensive suite of modules, TagFolio offers users a seamless and in
 
 From user management to image and video tagging, multimedia organization, text detection, social media analysis, and advanced natural language processing capabilities, TagFolio provides a holistic solution to streamline the entire workflow of handling multimedia content. 
 
-Web interface repository: https://github.com/Ummamali/webtagfolio
+Web Interface Repository: https://github.com/Ummamali/webtagfolio
 
 ## Key Features  
 
