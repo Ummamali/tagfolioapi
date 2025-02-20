@@ -9,6 +9,8 @@ From user management to image and video tagging, multimedia organization, text d
 
 Web Interface Repository: https://github.com/Ummamali/webtagfolio
 
+<img src="./preview.jpg" alt="Project Frontend Preview "/>
+
 ## Key Features  
 
 - **Image Tagging** – AI-powered object and person recognition for efficient media organization.  
